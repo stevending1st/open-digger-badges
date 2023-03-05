@@ -1,10 +1,12 @@
 # Logs
 logs
 *.log
+# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
+.pnpm-debug.log*
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
@@ -24,6 +26,7 @@ coverage
 
 # nyc test coverage
 .nyc_output
+/coverage
 
 # Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
@@ -35,17 +38,20 @@ bower_components
 .lock-wscript
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
-build/Release
+build/
 
 # Dependency directories
 node_modules/
 jspm_packages/
+.pnp/
+.pnp.js
 
 # TypeScript v1 declaration files
 typings/
 
 # TypeScript cache
 *.tsbuildinfo
+next-env.d.ts
 
 # Optional npm cache directory
 .npm
@@ -71,6 +77,8 @@ typings/
 # dotenv environment variables file
 .env
 .env.test
+# local env files
+.env*.local
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -102,3 +110,14 @@ dist
 
 # TernJS port file
 .tern-port
+
+# next.js
+/.next/
+/out/
+
+# misc
+.DS_Store
+*.pem
+
+# vercel
+.vercel

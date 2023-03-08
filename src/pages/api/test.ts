@@ -9,9 +9,9 @@ export default async function handler(
   res: NextApiResponse<any>
 ) {
   try {
-    const { owner,repo, metrics } = checkQuery(req.query);
+    const { owner,repo, metrics, month } = checkQuery(req.query);
     const batchMetricsData = await fetchBatchMetricsData({owner,repo, metrics})
-    const re = indexFilter(batchMetricsData[metrics[0]], 5)
+    const re = indexFilter(batchMetricsData[metrics[0]], month)
     res.status(200).send(re);
   } catch (err: any) {
     res.status(200).send("❌ ERROR:"+ err.message);

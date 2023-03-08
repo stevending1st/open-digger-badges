@@ -10,6 +10,15 @@ export const checkOwnerAndRepo = (query: NextApiRequest['query']) => {
   return { owner, scope: ScopeType.USER };
 }
 
+export const checkMonth = (query: NextApiRequest['query']) => {
+  const { month } = query;
+  if(!month) return -1;
+  if(Array.isArray(month)) throw Error("month cannot be an array type");
+  const monthNumber = Number.parseInt(month);
+  if(Number.isNaN(monthNumber)) throw Error("month must be a number");
+  return monthNumber;
+}
+
 export const scopeCheck = (scope: ScopeType, query: NextApiRequest['query']) => {
   const { metric } = query;
   if (!metric) throw Error('without metric')
@@ -27,7 +36,8 @@ export const scopeCheck = (scope: ScopeType, query: NextApiRequest['query']) => 
 export const checkQuery = (query: NextApiRequest['query']) => {
   const { owner, repo, scope } = checkOwnerAndRepo(query);
   const metricArr = scopeCheck(scope, query);
-  return { owner, repo, metrics: metricArr }
+  const month = checkMonth(query);
+  return { owner, repo, metrics: metricArr, month }
 }
 
 

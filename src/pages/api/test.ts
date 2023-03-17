@@ -4,6 +4,7 @@ import { makeBadge } from 'badge-maker'
 import { checkQuery } from '@/common/check';
 import { fetchBatchMetricsData } from '@/common/fetchData';
 import { indexFilter } from '@/common/filter';
+import { BadgeStyleType } from '@/common/badgeStyle';
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,7 +22,12 @@ export default async function handler(
     })
     res.status(200).send(svg);
   } catch (err: any) {
-    res.setHeader("Content-Type", "text");
-    res.status(200).send("❌ ERROR:"+ err.message);
+    res.setHeader("Content-Type", "image/svg+xml");
+    const svg = makeBadge({
+      message: 'ERR: ' + err.message,
+      color: 'red',
+      style: BadgeStyleType.FOR_THE_BADGE,
+    });
+    res.status(200).send(svg);
   }
 }

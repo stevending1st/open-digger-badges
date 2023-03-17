@@ -30,7 +30,7 @@ export const scopeCheck = (scope: ScopeType, query: NextApiRequest['query']) => 
     if (!currentScope.includes(scope)) return [...pre, cur];
     return pre;
   }, [])
-  if (metricNotInScope.length > 0) throw Error(`${metricNotInScope.join(",")} isn't in scope`)
+  if (metricNotInScope.length > 0) throw Error(`${metricNotInScope.join(",")} ${metricNotInScope.length > 1 ? 'is' : 'are'}n't in scope`)
   return metricArr;
 }
 

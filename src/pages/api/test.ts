@@ -20,6 +20,7 @@ export default async function handler(
     })
     res.status(200).send(svg);
   } catch (err: any) {
+    res.setHeader("Content-Type", "text");
     res.status(200).send("❌ ERROR:"+ err.message);
   }
 }

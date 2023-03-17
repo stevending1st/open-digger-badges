@@ -5,6 +5,7 @@ import { checkQuery } from '@/common/check';
 import { fetchBatchMetricsData } from '@/common/fetchData';
 import { indexFilter } from '@/common/filter';
 import { BadgeStyleType } from '@/common/badgeStyle';
+import { metricsRangeCalculation } from '@/common/timeConversion';
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,8 +16,9 @@ export default async function handler(
     const { owner,repo, metrics, month, badgeStyle } = checkQuery(req.query);
     const batchMetricsData = await fetchBatchMetricsData({owner,repo, metrics})
     const re = indexFilter(batchMetricsData[metrics[0]], month)
+    const timeRange = month < -1 ? '' : month === -1 ? "all" : 'last ' + metricsRangeCalculation(month);
     const svg = makeBadge({
-      label: metrics[0],
+      label: metrics[0] + ` (${timeRange})`,
       message: re.toString(),
       style: badgeStyle
     })

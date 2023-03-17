@@ -1,3 +1,5 @@
+import { BadgeStyleType } from "./badgeStyle";
+
 export interface MetricsDataType {
   [key: string]: number,
 }
@@ -10,6 +12,7 @@ export interface FetchMetricsDataInputType {
   owner: string,
   repo?: string,
   metric: string,
+  badgeStyle?: BadgeStyleType,
 }
 
 export type FetchBatchMetricsDataInputType = Omit<FetchMetricsDataInputType, 'metric'> & {

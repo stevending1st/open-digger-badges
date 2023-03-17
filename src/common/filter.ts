@@ -24,8 +24,12 @@ export const indexFilter = (data: MetricsDataType, month: number) => {
     }
     const monthArrInverted = monthArr.sort((a, b) => b - a)
     let result = 0;
-    for (let i = 0; i < month ; i++) {
-      result = (new Big(result)).add(dataMap.get(monthArrInverted[i])).toNumber();
+    if(month > monthArrInverted.length){
+      result = monthArrInverted.reduce((pre, current) => (new Big(pre)).add(dataMap.get(current)).toNumber(), 0)
+    } else {
+      for (let i = 0; i < month ; i++) {
+        result = (new Big(result)).add(dataMap.get(monthArrInverted[i])).toNumber();
+      }
     }
     return result
   }

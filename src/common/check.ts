@@ -1,4 +1,5 @@
 import { NextApiRequest } from "next";
+import { BadgeStyleType } from "./badgeStyle";
 import { metricScope, ScopeType } from "./scope";
 
 export const checkOwnerAndRepo = (query: NextApiRequest['query']) => {
@@ -33,11 +34,32 @@ export const scopeCheck = (scope: ScopeType, query: NextApiRequest['query']) => 
   return metricArr;
 }
 
+export const badgeStyleCheck = (query: NextApiRequest['query']) => {
+  const { badgeStyle } = query;
+  if (!badgeStyle) return BadgeStyleType.PLASTIC
+  if (Array.isArray(badgeStyle)) throw Error("badgeStyle cannot be an array type");
+  switch (badgeStyle) {
+    case BadgeStyleType.PLASTIC:
+      return BadgeStyleType.PLASTIC;
+    case BadgeStyleType.FLAT:
+      return BadgeStyleType.FLAT;
+    case BadgeStyleType.FLAT_SQUARE:
+      return BadgeStyleType.FLAT_SQUARE;
+    case BadgeStyleType.FOR_THE_BADGE:
+      return BadgeStyleType.FOR_THE_BADGE;
+    case BadgeStyleType.SOCIAL:
+      return BadgeStyleType.SOCIAL;
+    default:
+      return BadgeStyleType.FLAT;
+  }
+}
+
 export const checkQuery = (query: NextApiRequest['query']) => {
   const { owner, repo, scope } = checkOwnerAndRepo(query);
   const metricArr = scopeCheck(scope, query);
   const month = checkMonth(query);
-  return { owner, repo, metrics: metricArr, month }
+  const badgeStyle = badgeStyleCheck(query);
+  return { owner, repo, metrics: metricArr, month, badgeStyle }
 }
 
 

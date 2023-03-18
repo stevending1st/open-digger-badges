@@ -38,7 +38,7 @@ export const badgeStyleCheck = (query: NextApiRequest['query']) => {
   const { badgeStyle } = query;
   if (!badgeStyle) return BadgeStyleType.PLASTIC
   if (Array.isArray(badgeStyle)) throw Error("badgeStyle cannot be an array type");
-  return badgeStyle in BadgeStyleType ? badgeStyle : BadgeStyleType.FLAT
+  return badgeStyle in BadgeStyleType ? badgeStyle as BadgeStyleType : BadgeStyleType.FLAT
 }
 
 export const labelColorCheck = (query: NextApiRequest['query']) => {

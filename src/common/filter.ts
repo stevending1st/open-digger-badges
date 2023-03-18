@@ -2,35 +2,27 @@ import { Big } from 'big.js';
 import { MetricsDataType } from "./fetchData";
 
 export const indexFilter = (data: MetricsDataType, month: number) => {
+  let result = new Big(0);
   if (month < -1) {
-    return 0
   } else if (month === -1) {
-    let result = 0;
     for (const property in data) {
       if (/\S*-raw/.test(property)) continue
-      result = (new Big(result)).add(data[property]).toNumber();
+      result = result.add(data[property]);
     }
-    return result
   } else {
-    const dataMap = new Map();
-    const monthArr = [];
-    for (const property in data) {
-      if (/\S*-raw/.test(property)) continue
-      const propertyWithoutDash = property.replace("-", "")
-      const monthIndex = Number.parseInt(propertyWithoutDash);
-      if (Number.isNaN(monthIndex)) continue;
-      dataMap.set(monthIndex, data[property])
-      monthArr.push(monthIndex)
-    }
-    const monthArrInverted = monthArr.sort((a, b) => b - a)
-    let result = 0;
-    if(month > monthArrInverted.length){
-      result = monthArrInverted.reduce((pre, current) => (new Big(pre)).add(dataMap.get(current)).toNumber(), 0)
+    const dataArr = Object.entries(data)
+      .filter(([key, value]) => !/\S*-raw/.test(key))
+      .map(([key, value]) => ({ month: Number.parseInt(key.replace("-", "")), value }))
+      .sort((a, b) => b.month - a.month);
+    if(month > dataArr.length){
+      for(const { value } of dataArr){
+        result = result.add(value);
+      }
     } else {
-      for (let i = 0; i < month ; i++) {
-        result = (new Big(result)).add(dataMap.get(monthArrInverted[i])).toNumber();
+      for (const { value } of dataArr.slice(0, month)) {
+        result = result.add(value);
       }
     }
-    return result
   }
+  return result.toNumber();
 }

@@ -12,25 +12,26 @@ export default async function handler(
   res: NextApiResponse<any>
 ) {
   res.setHeader("Content-Type", "image/svg+xml");
+  let svg = '';
   try {
     const { owner, repo, metrics, month, labelColor, color, badgeStyle } = checkQuery(req.query);
     const batchMetricsData = await fetchBatchMetricsData({ owner, repo, metrics })
     const re = indexFilter(batchMetricsData[metrics[0]], month)
-    const svg = getIndexBadgeSVG({
+    svg = getIndexBadgeSVG({
       index: metrics[0],
       monthNum: month,
       message: re + '',
       labelColor,
       color,
       style: badgeStyle
-    });
-    res.status(200).send(svg);
+    })
   } catch (err: any) {
-    const svg = makeBadge({
+    svg = makeBadge({
       message: 'ERR: ' + err.message,
       color: 'red',
       style: BadgeStyleType.FOR_THE_BADGE,
     });
+  } finally {
     res.status(200).send(svg);
   }
 }

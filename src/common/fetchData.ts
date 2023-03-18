@@ -13,6 +13,8 @@ export interface FetchMetricsDataInputType {
   repo?: string,
   metric: string,
   badgeStyle?: BadgeStyleType,
+  labelColor?: string,
+  color?: string,
 }
 
 export type FetchBatchMetricsDataInputType = Omit<FetchMetricsDataInputType, 'metric'> & {

@@ -13,13 +13,15 @@ export default async function handler(
 ) {
   res.setHeader("Content-Type", "image/svg+xml");
   try {
-    const { owner,repo, metrics, month, badgeStyle } = checkQuery(req.query);
+    const { owner,repo, metrics, month, labelColor, color, badgeStyle } = checkQuery(req.query);
     const batchMetricsData = await fetchBatchMetricsData({owner,repo, metrics})
     const re = indexFilter(batchMetricsData[metrics[0]], month)
     const timeRange = month < -1 ? '' : month === -1 ? "all" : 'last ' + metricsRangeCalculation(month);
     const svg = makeBadge({
       label: metrics[0] + ` (${timeRange})`,
       message: re.toString(),
+      labelColor,
+      color,
       style: badgeStyle
     })
     res.status(200).send(svg);

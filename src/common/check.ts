@@ -54,12 +54,26 @@ export const badgeStyleCheck = (query: NextApiRequest['query']) => {
   }
 }
 
+export const labelColorCheck = (query: NextApiRequest['query']) => {
+  const { labelColor } = query;
+  if (Array.isArray(labelColor)) throw Error("labelColor cannot be an array type");
+  return labelColor || 'default'
+}
+
+export const colorCheck = (query: NextApiRequest['query']) => {
+  const { color } = query;
+  if (Array.isArray(color)) throw Error("color cannot be an array type");
+  return color || 'default'
+}
+
 export const checkQuery = (query: NextApiRequest['query']) => {
   const { owner, repo, scope } = checkOwnerAndRepo(query);
   const metricArr = scopeCheck(scope, query);
   const month = checkMonth(query);
+  const labelColor = labelColorCheck(query);
+  const color = colorCheck(query);
   const badgeStyle = badgeStyleCheck(query);
-  return { owner, repo, metrics: metricArr, month, badgeStyle }
+  return { owner, repo, metrics: metricArr, month, labelColor, color, badgeStyle }
 }
 
 

@@ -5,7 +5,7 @@ import { checkQuery } from '@/common/check';
 import { fetchBatchMetricsData } from '@/common/fetchData';
 import { indexFilter } from '@/common/filter';
 import { BadgeStyleType } from '@/common/badgeStyle';
-import { metricsRangeCalculation } from '@/common/timeConversion';
+import { getIndexBadgeSVG } from '@/common/getBadges';
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,17 +13,17 @@ export default async function handler(
 ) {
   res.setHeader("Content-Type", "image/svg+xml");
   try {
-    const { owner,repo, metrics, month, labelColor, color, badgeStyle } = checkQuery(req.query);
-    const batchMetricsData = await fetchBatchMetricsData({owner,repo, metrics})
+    const { owner, repo, metrics, month, labelColor, color, badgeStyle } = checkQuery(req.query);
+    const batchMetricsData = await fetchBatchMetricsData({ owner, repo, metrics })
     const re = indexFilter(batchMetricsData[metrics[0]], month)
-    const timeRange = month < -1 ? '' : month === -1 ? "all" : 'last ' + metricsRangeCalculation(month);
-    const svg = makeBadge({
-      label: metrics[0] + ` (${timeRange})`,
-      message: re.toString(),
+    const svg = getIndexBadgeSVG({
+      index: metrics[0],
+      monthNum: month,
+      message: re + '',
       labelColor,
       color,
       style: badgeStyle
-    })
+    });
     res.status(200).send(svg);
   } catch (err: any) {
     const svg = makeBadge({

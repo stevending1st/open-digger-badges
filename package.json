@@ -12,6 +12,7 @@
     "@types/node": "18.14.6",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
+    "@unocss/reset": "^0.50.6",
     "badge-maker": "^3.3.1",
     "big.js": "^6.2.1",
     "eslint": "8.35.0",

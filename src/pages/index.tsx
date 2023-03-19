@@ -1,3 +1,4 @@
+import { badgeStyleList } from '@/common/badgeStyle'
 import { ODBInput } from '@/components/OBDInput'
 import { ODBSelect } from '@/components/OBDSelect'
 import Head from 'next/head'
@@ -51,11 +52,7 @@ export default function Home() {
             <div className="my-2"><h4>Badge Style Configuration</h4></div>
             <div className="my-2">
               <label htmlFor="badge-style">Choose a Style For Badge:</label>
-              <ODBSelect name="badge-style" optionList={[
-                { value: "", label: "--Please choose a style--" },
-                { value: "dog", label: "Dog" },
-                { value: "cat", label: "Cat" },
-              ]} />
+              <ODBSelect name="badge-style" optionList={badgeStyleList} />
             </div>
             <div className="my-2">
               <label htmlFor="label-color">Label Color:</label>

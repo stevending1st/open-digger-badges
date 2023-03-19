@@ -1,7 +1,8 @@
+import { ODBInput } from '@/components/OBDInput'
+import { ODBSelect } from '@/components/OBDSelect'
 import Head from 'next/head'
 
 export default function Home() {
-  
   return (
     <>
       <Head>
@@ -10,8 +11,62 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <h1>Open Digger Badges</h1>
+      <main className='vh-100'>
+        <h1 className='text-center mt-20'>Open Digger Badges</h1>
+        <p className="italic text-center mt-4">A project to show the badges of <a href='https://github.com/X-lab2017/open-digger'>OpenDigger</a> indicators.</p>
+
+        <div className='flex justify-center'>
+          <div className='border-1 b-solid py-4 px-6 my-4 bg-#FFCCCC max-w-2xl b-rd-2 border-red'>
+            <strong className='font-size-0 text-center mt-20 color-#FF0000'>Warning:</strong>
+            <p className='color-#FF0000 mt-2 font-500 italic'>
+              The API is not yet stable, please do not use it in production environment.
+            </p>
+          </div>
+        </div>
+
+        <div className='flex justify-center'>
+          <div className='flex flex-col max-w-2xl'>
+            <div className="my-2"><h4>Basic Information</h4></div>
+            <div className="my-2">
+              <label htmlFor="owner-name">Owner Name:</label>
+              <ODBInput placeholder="owner name" name="owner-name"/>
+            </div>
+            <div className="my-2">
+              <label htmlFor="repo-name">Repo Name:</label>
+              <ODBInput placeholder="repo name" name="repo-name"/>
+            </div>
+            <div className="my-2">
+              <label htmlFor="metric">Choose a Metric:</label>
+              <ODBSelect name="metric" optionList={[
+                { value: "", label: "--Please choose a metric--" },
+                { value: "dog", label: "Dog" },
+                { value: "cat", label: "Cat" },
+              ]} />
+            </div>
+            <div className="my-2">
+              <label htmlFor="month-number">Number of months:</label>
+              <ODBInput placeholder="-1" name="month-number"/>
+            </div>
+            <hr />
+            <div className="my-2"><h4>Badge Style Configuration</h4></div>
+            <div className="my-2">
+              <label htmlFor="badge-style">Choose a Style For Badge:</label>
+              <ODBSelect name="badge-style" optionList={[
+                { value: "", label: "--Please choose a style--" },
+                { value: "dog", label: "Dog" },
+                { value: "cat", label: "Cat" },
+              ]} />
+            </div>
+            <div className="my-2">
+              <label htmlFor="label-color">Label Color:</label>
+              <ODBInput placeholder="label color" name="label-color"/>
+            </div>
+            <div className="my-2">
+              <label htmlFor="message-color">Message Color:</label>
+              <ODBInput placeholder="message color" name="message-color"/>
+            </div>
+          </div>
+        </div>
       </main>
     </>
   )

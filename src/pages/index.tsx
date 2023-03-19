@@ -26,15 +26,21 @@ export default function Home() {
         </div>
 
         <div className='flex justify-center'>
-          <div className='flex flex-col max-w-2xl'>
+          <form className='flex flex-col max-w-2xl' onSubmit={(e) => {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form as HTMLFormElement);
+            const formJson = Object.fromEntries(formData.entries());
+            console.log(formJson);
+          }}>
             <div className="my-2"><h4>Basic Information</h4></div>
             <div className="my-2">
               <label htmlFor="owner-name">Owner Name:</label>
-              <ODBInput placeholder="owner name" name="owner-name"/>
+              <ODBInput placeholder="owner name" name="owner-name" />
             </div>
             <div className="my-2">
               <label htmlFor="repo-name">Repo Name:</label>
-              <ODBInput placeholder="repo name" name="repo-name"/>
+              <ODBInput placeholder="repo name" name="repo-name" />
             </div>
             <div className="my-2">
               <label htmlFor="metric">Choose a Metric:</label>
@@ -62,7 +68,11 @@ export default function Home() {
               <label htmlFor="message-color">Message Color:</label>
               <ODBInput placeholder="message color" name="message-color"/>
             </div>
-          </div>
+            <div>
+            <button type='submit' disabled={false} className="px-3 py-2 mx-1 border-none b-rd-1 color-white bg-#0084ff active:bg-#0084ee hover:bg-#1195ff disabled:bg-#eeeff1! disabled:opacity-50!">Copy Badge URL</button>
+            <button disabled={true} className="px-3 py-2 mx-1 border-none b-rd-1 color-white bg-#0084ff active:bg-#0084ee hover:bg-#1195ff disabled:bg-#0084ff! disabled:opacity-50!">Copy Markdown</button>
+            </div>
+          </form>
         </div>
       </main>
     </>

@@ -5,7 +5,11 @@ const nextConfig = {
   reactStrictMode: true,
   webpack: (config) => {
     config.plugins.push(
-      UnoCSS(),
+      UnoCSS({
+        rules: [
+          [/^bg-(\S+)$/, ([, str]) => ({ 'background-color': `${str}` })],
+        ]
+      }),
     )
     return config
   },

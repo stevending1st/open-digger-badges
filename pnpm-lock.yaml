@@ -9,6 +9,7 @@ specifiers:
   '@unocss/webpack': ^0.50.6
   badge-maker: ^3.3.1
   big.js: ^6.2.1
+  classnames: ^2.3.2
   eslint: 8.35.0
   eslint-config-next: 13.2.3
   next: 13.2.3
@@ -24,6 +25,7 @@ dependencies:
   '@unocss/reset': 0.50.6
   badge-maker: 3.3.1
   big.js: 6.2.1
+  classnames: 2.3.2
   eslint: 8.35.0
   eslint-config-next: 13.2.3_ycpbpc6yetojsgtrx3mwntkhsu
   next: 13.2.3_biqbaboplfbrettd7655fr4n2y
@@ -843,6 +845,10 @@ packages:
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
+
+  /classnames/2.3.2:
+    resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==}
+    dev: false
 
   /client-only/0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}

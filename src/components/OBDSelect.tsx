@@ -1,22 +1,21 @@
 import classNames from "classnames";
+import { ForwardedRef, forwardRef } from "react";
 
 export interface ODBOption {
     label: string;
     value: string;
 }
 
-export interface ODBSelectProps {
-    placeholder?: string,
-    className?: string,
-    name?: HTMLSelectElement['name'],
-    id?: HTMLSelectElement['id'],
-    size?: HTMLSelectElement["size"],
-    optionList?: ODBOption[],
-    value?: HTMLSelectElement["value"],
-    onChange?: (value: any) => any,
+export interface ODBSelectProps extends React.InputHTMLAttributes<HTMLSelectElement> {
+    id?: string;
+    optionList?: ODBOption[];
 }
 
-export const ODBSelect = ({ className, name, id, size, optionList, value, onChange }: ODBSelectProps) =>
-    <select className={classNames("outline-none mx-1", className)} {...{ value, size, name, id }} onChange={onChange}>
-        {optionList?.map(({label, value}) => <option key={value} value={value}>{label}</option>)}
+export const ODBSelect = forwardRef<HTMLSelectElement, ODBSelectProps>((props: ODBSelectProps, ref: ForwardedRef<HTMLSelectElement>) => {
+    const { id, className, optionList, ...rest } = props;
+    return <select {...rest} className={classNames("outline-none mx-1", className)} id={id}>
+        {optionList?.map(({ label, value }) => <option key={value} value={value}>{label}</option>)}
     </select>
+})
+
+ODBSelect.displayName = "ODBSelect";

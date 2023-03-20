@@ -24,7 +24,7 @@ export default function Home() {
   const color = watch("color");
 
   const isDisabled = useMemo(() => !owner || !metric, [owner, metric]);
-  const metricName = useMemo(() => metricsList.filter(({ value }) => value === metric)[0].label, [metric])
+  const metricName = useMemo(() => metricsList.filter(({ value }) => value === metric)[0]?.label, [metric])
 
   const getBadgeURL = () => `${location?.origin}/api/indexBadge?${(new URLSearchParams(filterEmptyStringKey(getValues()))).toString()}`
 

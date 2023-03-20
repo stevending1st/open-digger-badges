@@ -26,6 +26,13 @@
   "devDependencies": {
     "@types/big.js": "^6.1.6",
     "@unocss/webpack": "^0.50.6",
+    "commitizen": "^4.3.0",
+    "cz-customizable": "^7.0.0",
     "unocss": "^0.50.6"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-customizable"
+    }
   }
 }

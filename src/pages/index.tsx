@@ -1,31 +1,32 @@
 import { badgeStyleList } from '@/common/badgeStyle'
-import { getFormData } from '@/common/formData'
 import { ODBInput } from '@/components/OBDInput'
 import { ODBSelect } from '@/components/OBDSelect'
 import Head from 'next/head'
-import { FormEvent, useRef } from 'react'
+import { useDebounce } from 'react-use';
+import { Controller, useForm } from 'react-hook-form'
 
 export default function Home() {
-  const formRef = useRef<HTMLFormElement>(null);
+  const { register, control, getValues, watch } = useForm();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.target;
-    const formJson = getFormData(form as HTMLFormElement);
-    console.log(formJson);
-  }
+  const owner = watch("owner");
+  const repo = watch("repo");
+  const metrics = watch("metrics");
+  const month = watch("month");
+  const badgeStyle = watch("badgeStyle");
+  const labelColor = watch("labelColor");
+  const color = watch("color");
+
+  useDebounce(() => {
+    console.log("*---->", getValues())
+  }, 500, [owner, repo, metrics, month, badgeStyle, labelColor, color])
 
   const handleGetBadgeURL = () => {
-    const formElement = formRef.current;
-    if (!formElement) return;
-    const formJson = getFormData(formElement);
+    const formJson = getValues();
     console.log("1--->", formJson)
   }
 
   const handleGetMarkdown = () => {
-    const formElement = formRef.current;
-    if (!formElement) return;
-    const formJson = getFormData(formElement);
+    const formJson = getValues();
     console.log("2--->", formJson)
   }
 
@@ -51,49 +52,65 @@ export default function Home() {
         </div>
 
         <div className='flex justify-center'>
-          <form className='flex flex-col max-w-2xl' onSubmit={handleSubmit} ref={formRef}>
+          <form className='flex flex-col max-w-2xl'>
             <div className="my-2"><h4>Basic Information</h4></div>
             <div className="my-2">
-              <label htmlFor="owner-name">
+              <label htmlFor="owner">
                 <sup className='color-#FF0000'>*</sup>Owner Name:
               </label>
-              <ODBInput placeholder="owner name" id="owner-name" name="owner" />
+              <ODBInput placeholder="owner name" id="owner" {...register("owner")} />
             </div>
             <div className="my-2">
-              <label htmlFor="repo-name">
+              <label htmlFor="repo">
                 <sup className='color-#FF0000'>*</sup>Repo Name:
               </label>
-              <ODBInput placeholder="repo name" id="repo-name" name="repo" />
+              <ODBInput placeholder="repo name" id="repo" {...register("repo")} />
             </div>
             <div className="my-2">
-              <label htmlFor="metric">
+              <label htmlFor="metrics">
                 <sup className='color-#FF0000'>*</sup>Choose a Metric:
               </label>
-              <ODBSelect id="metric" name="metrics" optionList={[
-                { value: "", label: "--Please choose a metric--" },
-                { value: "dog", label: "Dog" },
-                { value: "cat", label: "Cat" },
-              ]} />
+              <Controller
+                name="metrics"
+                control={control}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <ODBSelect {...field} id="metrics" optionList={[
+                    { value: "", label: "--Please choose a metric--" },
+                    { value: "dog", label: "Dog" },
+                    { value: "cat", label: "Cat" },
+                  ]} />
+                )}
+              />
             </div>
             <div className="my-2">
-              <label htmlFor="month-number">
+              <label htmlFor="month">
                 <sup className='color-#FF0000'>*</sup>Number of months:
               </label>
-              <ODBInput placeholder="-1" id="month-number" name="month" />
+              <ODBInput placeholder="-1" id="month" {...register("month")} />
             </div>
             <hr />
             <div className="my-2"><h4>Badge Style Configuration</h4></div>
             <div className="my-2">
-              <label htmlFor="badge-style">Choose a Style For Badge:</label>
-              <ODBSelect id="badge-style" optionList={badgeStyleList} name="badgeStyle" />
+              <label htmlFor="badgeStyle">Choose a Style For Badge:</label>
+              <Controller
+                name="badgeStyle"
+                control={control}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <ODBSelect {...field} id="badgeStyle" optionList={badgeStyleList} />
+                )}
+              />
             </div>
             <div className="my-2">
-              <label htmlFor="label-color">Label Color:</label>
-              <ODBInput placeholder="label color" id="label-color" name="labelColor" />
+              <label htmlFor="labelColor">Label Color:</label>
+              <ODBInput placeholder="label color" id="labelColor" {...register("labelColor")} />
             </div>
             <div className="my-2">
               <label htmlFor="message-color">Message Color:</label>
-              <ODBInput placeholder="message color" id="message-color" name="color" />
+              <ODBInput placeholder="message color" id="message-color" {...register("color")} />
             </div>
             <div>
               <button type="button" disabled={false} className="px-3 py-2 mx-1 border-none b-rd-1 color-white bg-#0084ff active:bg-#0084ee hover:bg-#1195ff disabled:bg-#eeeff1! disabled:opacity-50!" onClick={handleGetBadgeURL}>Copy Badge URL</button>

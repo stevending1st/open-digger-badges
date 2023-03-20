@@ -4,25 +4,24 @@ import { metricScope, ScopeType } from "./scope";
 
 export const checkOwnerAndRepo = (query: NextApiRequest['query']) => {
   const { owner, repo } = query;
-  if (!owner) throw Error('without owner');
-  if (Array.isArray(owner)) throw Error("owner cannot be an array type");
-  if (Array.isArray(repo)) throw Error("owner cannot be an array type");
+  if (!owner || Array.isArray(owner)) throw Error('Invalid owner value.');
+  if (Array.isArray(repo)) throw Error("Invalid repo value.");
   if (repo) return { owner, repo, scope: ScopeType.REPO };
   return { owner, scope: ScopeType.USER };
 }
 
 export const checkMonth = (query: NextApiRequest['query']) => {
   const { month } = query;
-  if(!month) return -1;
-  if(Array.isArray(month)) throw Error("month cannot be an array type");
+  if (!month) return -1;
+  if (Array.isArray(month)) throw Error("Invalid month value.");
   const monthNumber = Number.parseInt(month);
-  if(Number.isNaN(monthNumber)) throw Error("month must be a number");
+  if (Number.isNaN(monthNumber)) throw Error("Invalid month value.");
   return monthNumber;
 }
 
 export const scopeCheck = (scope: ScopeType, query: NextApiRequest['query']) => {
   const { metric } = query;
-  if (!metric) throw Error('without metric')
+  if (!metric) throw Error('Invalid metric value.')
   const metricArr = typeof metric === 'string' ? metric.split(",") : metric;
   const metricNotInScope = metricArr.reduce<string[]>((pre, cur) => {
     const currentScope = metricScope[cur.toLocaleLowerCase() as keyof typeof metricScope]
@@ -37,19 +36,19 @@ export const scopeCheck = (scope: ScopeType, query: NextApiRequest['query']) => 
 export const badgeStyleCheck = (query: NextApiRequest['query']) => {
   const { badgeStyle } = query;
   if (!badgeStyle) return BadgeStyleType.PLASTIC
-  if (Array.isArray(badgeStyle)) throw Error("badgeStyle cannot be an array type");
+  if (Array.isArray(badgeStyle)) throw Error("Invalid badgeStyle value.");
   return badgeStyle in BadgeStyleType ? badgeStyle as BadgeStyleType : BadgeStyleType.FLAT
 }
 
 export const labelColorCheck = (query: NextApiRequest['query']) => {
   const { labelColor } = query;
-  if (Array.isArray(labelColor)) throw Error("labelColor cannot be an array type");
+  if (Array.isArray(labelColor)) throw Error("Invalid labelColor value.");
   return labelColor || 'default'
 }
 
 export const colorCheck = (query: NextApiRequest['query']) => {
   const { color } = query;
-  if (Array.isArray(color)) throw Error("color cannot be an array type");
+  if (Array.isArray(color)) throw Error("Invalid color value.");
   return color || 'default'
 }
 

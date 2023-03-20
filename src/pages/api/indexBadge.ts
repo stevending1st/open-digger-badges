@@ -14,11 +14,11 @@ export default async function handler(
   res.setHeader("Content-Type", "image/svg+xml");
   let svg = '';
   try {
-    const { owner, repo, metrics, month, labelColor, color, badgeStyle } = checkQuery(req.query);
-    const batchMetricsData = await fetchBatchMetricsData({ owner, repo, metrics })
-    const re = indexFilter(batchMetricsData[metrics[0]], month)
+    const { owner, repo, metric, month, labelColor, color, badgeStyle } = checkQuery(req.query);
+    const batchMetricsData = await fetchBatchMetricsData({ owner, repo, metric })
+    const re = indexFilter(batchMetricsData[metric[0]], month)
     svg = getIndexBadgeSVG({
-      index: metrics[0],
+      index: metric[0],
       monthNum: month,
       message: re + '',
       labelColor,

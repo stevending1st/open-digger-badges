@@ -26,3 +26,9 @@ export const indexFilter = (data: MetricsDataType, month: number) => {
   }
   return result.toNumber();
 }
+
+export const filterEmptyStringKey = (obj: {[key: string]: any}) =>
+  Object.keys(obj).reduce((pre, key) => {
+    if(obj[key] !== '') { pre[key] = obj[key]}
+    return pre
+  }, {} as {[key: string]: any})

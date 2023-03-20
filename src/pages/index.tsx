@@ -2,33 +2,44 @@ import { badgeStyleList } from '@/common/badgeStyle'
 import { ODBInput } from '@/components/OBDInput'
 import { ODBSelect } from '@/components/OBDSelect'
 import Head from 'next/head'
-import { useDebounce } from 'react-use';
+import { useCopyToClipboard, useDebounce } from 'react-use';
 import { Controller, useForm } from 'react-hook-form'
+import { filterEmptyStringKey } from '@/common/filter';
+import { useMemo, useRef } from 'react';
+import { metricsList } from '@/common/metrics';
 
 export default function Home() {
-  const { register, control, getValues, watch } = useForm();
+  const { register, control, getValues, setValue, watch } = useForm();
+
+  const badgeBox = useRef<HTMLDivElement>(null);
+
+  const [state, copyToClipboard] = useCopyToClipboard();
 
   const owner = watch("owner");
   const repo = watch("repo");
-  const metrics = watch("metrics");
+  const metric = watch("metric");
   const month = watch("month");
   const badgeStyle = watch("badgeStyle");
   const labelColor = watch("labelColor");
   const color = watch("color");
 
-  useDebounce(() => {
-    console.log("*---->", getValues())
-  }, 500, [owner, repo, metrics, month, badgeStyle, labelColor, color])
+  const isDisabled = useMemo(() => !owner || !metric, [owner, metric]);
+  const metricName = useMemo(() => metricsList.filter(({ value }) => value === metric)[0].label, [metric])
 
-  const handleGetBadgeURL = () => {
-    const formJson = getValues();
-    console.log("1--->", formJson)
-  }
+  const getBadgeURL = () => `${location?.origin}/api/indexBadge?${(new URLSearchParams(filterEmptyStringKey(getValues()))).toString()}`
 
-  const handleGetMarkdown = () => {
-    const formJson = getValues();
-    console.log("2--->", formJson)
-  }
+  useDebounce(async () => {
+    const badgeURL = getBadgeURL();
+    const svg = await (await fetch(badgeURL)).text()
+    if (!badgeBox.current) return;
+    badgeBox.current.innerHTML = svg;
+  }, 500, [owner, repo, metric, month, badgeStyle, labelColor, color])
+
+  const handleGetBadgeURL = () =>
+    copyToClipboard(`![${metricName}](${getBadgeURL()}) `)
+
+  const handleGetMarkdown = () =>
+    copyToClipboard(`<img alt="${metricName}" src="${getBadgeURL()}">`);
 
   return (
     <>
@@ -51,6 +62,10 @@ export default function Home() {
           </div>
         </div>
 
+        <div className='flex justify-center' ref={badgeBox}>
+
+        </div>
+
         <div className='flex justify-center'>
           <form className='flex flex-col max-w-2xl'>
             <div className="my-2"><h4>Basic Information</h4></div>
@@ -61,26 +76,23 @@ export default function Home() {
               <ODBInput placeholder="owner name" id="owner" {...register("owner")} />
             </div>
             <div className="my-2">
-              <label htmlFor="repo">
-                <sup className='color-#FF0000'>*</sup>Repo Name:
-              </label>
+              <label htmlFor="repo">Repo Name:</label>
               <ODBInput placeholder="repo name" id="repo" {...register("repo")} />
             </div>
             <div className="my-2">
-              <label htmlFor="metrics">
+              <label htmlFor="metric">
                 <sup className='color-#FF0000'>*</sup>Choose a Metric:
               </label>
               <Controller
-                name="metrics"
+                name="metric"
                 control={control}
                 defaultValue=""
                 rules={{ required: true }}
                 render={({ field }) => (
-                  <ODBSelect {...field} id="metrics" optionList={[
-                    { value: "", label: "--Please choose a metric--" },
-                    { value: "dog", label: "Dog" },
-                    { value: "cat", label: "Cat" },
-                  ]} />
+                  <ODBSelect {...field} id="metric" optionList={metricsList} onChange={({ target }) => {
+                    console.log("target", target.value)
+                    setValue("metric", target.value)
+                  }} />
                 )}
               />
             </div>
@@ -100,7 +112,10 @@ export default function Home() {
                 defaultValue=""
                 rules={{ required: true }}
                 render={({ field }) => (
-                  <ODBSelect {...field} id="badgeStyle" optionList={badgeStyleList} />
+                  <ODBSelect {...field} id="badgeStyle" optionList={badgeStyleList} onChange={({ target }) => {
+                    console.log("badgeStyle", target.value)
+                    setValue("badgeStyle", target.value)
+                  }} />
                 )}
               />
             </div>
@@ -113,8 +128,8 @@ export default function Home() {
               <ODBInput placeholder="message color" id="message-color" {...register("color")} />
             </div>
             <div>
-              <button type="button" disabled={false} className="px-3 py-2 mx-1 border-none b-rd-1 color-white bg-#0084ff active:bg-#0084ee hover:bg-#1195ff disabled:bg-#eeeff1! disabled:opacity-50!" onClick={handleGetBadgeURL}>Copy Badge URL</button>
-              <button type="button" disabled={false} className="px-3 py-2 mx-1 border-none b-rd-1 color-white bg-#0084ff active:bg-#0084ee hover:bg-#1195ff disabled:bg-#0084ff! disabled:opacity-50!" onClick={handleGetMarkdown}>Copy Markdown</button>
+              <button type="button" disabled={isDisabled} className="px-3 py-2 mx-1 border-none b-rd-1 color-white bg-#0084ff active:bg-#0084ee hover:bg-#1195ff disabled:bg-#0084ff! disabled:opacity-50!" onClick={handleGetBadgeURL}>Copy Badge URL</button>
+              <button type="button" disabled={isDisabled} className="px-3 py-2 mx-1 border-none b-rd-1 color-white bg-#0084ff active:bg-#0084ee hover:bg-#1195ff disabled:bg-#0084ff! disabled:opacity-50!" onClick={handleGetMarkdown}>Copy Markdown</button>
             </div>
           </form>
         </div>

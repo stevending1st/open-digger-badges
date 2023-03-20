@@ -18,7 +18,7 @@ export interface FetchMetricsDataInputType {
 }
 
 export type FetchBatchMetricsDataInputType = Omit<FetchMetricsDataInputType, 'metric'> & {
-  metrics: string[]
+  metric: string[]
 }
 
 export const fetchMetricsData = async ({ owner, repo, metric }: FetchMetricsDataInputType) => {
@@ -27,11 +27,11 @@ export const fetchMetricsData = async ({ owner, repo, metric }: FetchMetricsData
   return result
 }
 
-export const fetchBatchMetricsData = async ({ owner, repo, metrics }: FetchBatchMetricsDataInputType) => {
+export const fetchBatchMetricsData = async ({ owner, repo, metric }: FetchBatchMetricsDataInputType) => {
   let resultBatchData: BatchMetricsDataInputType = {};
-  for (let metric of metrics) {
-    const result = await fetchMetricsData({ owner, repo, metric})
-    resultBatchData = {...resultBatchData, [metric]: result}
+  for (let item of metric) {
+    const result = await fetchMetricsData({ owner, repo, metric: item})
+    resultBatchData = {...resultBatchData, [item]: result}
   }
   return resultBatchData;
 }

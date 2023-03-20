@@ -50,7 +50,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className='vh-100'>
-        <h1 className='text-center mt-20'>Open Digger Badges</h1>
+        <h1 className='text-center mt-20'><a href='https://github.com/stevending1st/open-digger-badges/'>Open Digger Badges</a></h1>
         <p className="italic text-center mt-4">A project to show the badges of <a href='https://github.com/X-lab2017/open-digger'>OpenDigger</a> indicators.</p>
 
         <div className='flex justify-center'>

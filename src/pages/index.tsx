@@ -1,9 +1,34 @@
 import { badgeStyleList } from '@/common/badgeStyle'
+import { getFormData } from '@/common/formData'
 import { ODBInput } from '@/components/OBDInput'
 import { ODBSelect } from '@/components/OBDSelect'
 import Head from 'next/head'
+import { FormEvent, useRef } from 'react'
 
 export default function Home() {
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.target;
+    const formJson = getFormData(form as HTMLFormElement);
+    console.log(formJson);
+  }
+
+  const handleGetBadgeURL = () => {
+    const formElement = formRef.current;
+    if (!formElement) return;
+    const formJson = getFormData(formElement);
+    console.log("1--->", formJson)
+  }
+
+  const handleGetMarkdown = () => {
+    const formElement = formRef.current;
+    if (!formElement) return;
+    const formJson = getFormData(formElement);
+    console.log("2--->", formJson)
+  }
+
   return (
     <>
       <Head>
@@ -26,51 +51,53 @@ export default function Home() {
         </div>
 
         <div className='flex justify-center'>
-          <form className='flex flex-col max-w-2xl' onSubmit={(e) => {
-            e.preventDefault();
-            const form = e.target;
-            const formData = new FormData(form as HTMLFormElement);
-            const formJson = Object.fromEntries(formData.entries());
-            console.log(formJson);
-          }}>
+          <form className='flex flex-col max-w-2xl' onSubmit={handleSubmit} ref={formRef}>
             <div className="my-2"><h4>Basic Information</h4></div>
             <div className="my-2">
-              <label htmlFor="owner-name">Owner Name:</label>
-              <ODBInput placeholder="owner name" name="owner-name" />
+              <label htmlFor="owner-name">
+                <sup className='color-#FF0000'>*</sup>Owner Name:
+              </label>
+              <ODBInput placeholder="owner name" id="owner-name" name="owner" />
             </div>
             <div className="my-2">
-              <label htmlFor="repo-name">Repo Name:</label>
-              <ODBInput placeholder="repo name" name="repo-name" />
+              <label htmlFor="repo-name">
+                <sup className='color-#FF0000'>*</sup>Repo Name:
+              </label>
+              <ODBInput placeholder="repo name" id="repo-name" name="repo" />
             </div>
             <div className="my-2">
-              <label htmlFor="metric">Choose a Metric:</label>
-              <ODBSelect name="metric" optionList={[
+              <label htmlFor="metric">
+                <sup className='color-#FF0000'>*</sup>Choose a Metric:
+              </label>
+              <ODBSelect id="metric" name="metrics" optionList={[
                 { value: "", label: "--Please choose a metric--" },
                 { value: "dog", label: "Dog" },
                 { value: "cat", label: "Cat" },
               ]} />
             </div>
             <div className="my-2">
-              <label htmlFor="month-number">Number of months:</label>
-              <ODBInput placeholder="-1" name="month-number"/>
+              <label htmlFor="month-number">
+                <sup className='color-#FF0000'>*</sup>Number of months:
+              </label>
+              <ODBInput placeholder="-1" id="month-number" name="month" />
             </div>
             <hr />
             <div className="my-2"><h4>Badge Style Configuration</h4></div>
             <div className="my-2">
               <label htmlFor="badge-style">Choose a Style For Badge:</label>
-              <ODBSelect name="badge-style" optionList={badgeStyleList} />
+              <ODBSelect id="badge-style" optionList={badgeStyleList} name="badgeStyle" />
             </div>
             <div className="my-2">
               <label htmlFor="label-color">Label Color:</label>
-              <ODBInput placeholder="label color" name="label-color"/>
+              <ODBInput placeholder="label color" id="label-color" name="labelColor" />
             </div>
             <div className="my-2">
               <label htmlFor="message-color">Message Color:</label>
-              <ODBInput placeholder="message color" name="message-color"/>
+              <ODBInput placeholder="message color" id="message-color" name="color" />
             </div>
             <div>
-            <button type='submit' disabled={false} className="px-3 py-2 mx-1 border-none b-rd-1 color-white bg-#0084ff active:bg-#0084ee hover:bg-#1195ff disabled:bg-#eeeff1! disabled:opacity-50!">Copy Badge URL</button>
-            <button disabled={true} className="px-3 py-2 mx-1 border-none b-rd-1 color-white bg-#0084ff active:bg-#0084ee hover:bg-#1195ff disabled:bg-#0084ff! disabled:opacity-50!">Copy Markdown</button>
+              <button type="button" disabled={false} className="px-3 py-2 mx-1 border-none b-rd-1 color-white bg-#0084ff active:bg-#0084ee hover:bg-#1195ff disabled:bg-#eeeff1! disabled:opacity-50!" onClick={handleGetBadgeURL}>Copy Badge URL</button>
+              <button type="button" disabled={false} className="px-3 py-2 mx-1 border-none b-rd-1 color-white bg-#0084ff active:bg-#0084ee hover:bg-#1195ff disabled:bg-#0084ff! disabled:opacity-50!" onClick={handleGetMarkdown}>Copy Markdown</button>
             </div>
           </form>
         </div>
